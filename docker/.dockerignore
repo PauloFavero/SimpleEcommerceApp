@@ -1,0 +1,16 @@
+.DS_Store
+.git
+.github
+.gitignore
+.idea
+.vscode
+Dockerfile
+*-compose.yml
+README.md
+
+# python specifcs
+*.pyc
+__pycache__/
+venv/
+mypy.ini
+.pylintrc

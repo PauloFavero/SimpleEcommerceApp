@@ -1,0 +1,38 @@
+# write a compose file for a fastapi application connected with mongodb
+
+version: '3.0'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    image: pfp-ecomm-server:1.0.0
+    ports:
+      - "3000:3000"
+    networks:
+      -  ecomm-net
+    depends_on:
+      - db
+    volumes:
+      - ./app:/src/app
+    working_dir: /src/app
+    command: uvicorn server.main:app --host 0.0.0.0 --port 3000 --reload
+  
+  db:
+    image: mongo:7.0.5
+    ports:
+      - "27017:27017"
+    networks:
+      - ecomm-net
+    volumes:
+      - db-data:/data
+    
+  
+networks:
+  ecomm-net:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
