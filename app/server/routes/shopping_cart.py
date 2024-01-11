@@ -20,9 +20,11 @@ shopping_cart_repo = ShoppingCartRepository()
     "/{id}",
     status_code=HTTPStatus.OK,
 )
-async def get_shopping_cart(id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> ShoppingCartModel:
+async def get_shopping_cart(
+    id: str = Path(..., regex=r"^[0-9a-f]{24}$")
+) -> ShoppingCartModel:
     shopping_cart = shopping_cart_repo.get_shopping_cart_by_id(id)
-    print('get_shopping_cart', shopping_cart)
+    print("get_shopping_cart", shopping_cart)
     if not shopping_cart:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
@@ -47,27 +49,33 @@ def create_shopping_cart(shopping_cart: ShoppingCart) -> str:
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=str(e),
         )
-    
+
+
 @shopping_cart_router.post("/{id}/add-items", status_code=HTTPStatus.CREATED)
-def add_items_to_cart(items: List[CartItem], id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> str:
+def add_items_to_cart(
+    items: List[CartItem], id: str = Path(..., regex=r"^[0-9a-f]{24}$")
+) -> str:
     result = shopping_cart_repo.add_items(id, items)
     if not result:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail="Shopping Cart not found",
         )
-    
+
     return "Items added to cart."
 
+
 @shopping_cart_router.post("/{id}/remove-items", status_code=HTTPStatus.CREATED)
-def remove_items_to_cart(items: List[str], id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> str:
+def remove_items_to_cart(
+    items: List[str], id: str = Path(..., regex=r"^[0-9a-f]{24}$")
+) -> str:
     result = shopping_cart_repo.remove_items(id, items)
     if not result:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail="Shopping Cart not found",
         )
-    
+
     return f"Items {items} removed from cart."
 
 

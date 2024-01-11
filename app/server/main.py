@@ -32,6 +32,7 @@ app.include_router(user_router)
 app.include_router(products_router)
 app.include_router(shopping_cart_router)
 
+
 @app.get("/", status_code=HTTPStatus.OK)
 def root():
     return "E-commerce Application API"

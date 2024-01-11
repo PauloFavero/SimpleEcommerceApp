@@ -16,7 +16,6 @@ user_repo = UsersRepository()
 shopping_cart_repo = ShoppingCartRepository()
 
 
-
 @user_router.get("/", status_code=HTTPStatus.OK)
 async def get_users(page: int = 1, limit: int = 10) -> PaginatedUsersModel:
     users = user_repo.get_all_users(page=page, limit=limit)
@@ -59,6 +58,7 @@ def add_user(user: User) -> str:
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=str(e),
         )
+
 
 # partially update user
 @user_router.patch("/{id}", status_code=HTTPStatus.OK)

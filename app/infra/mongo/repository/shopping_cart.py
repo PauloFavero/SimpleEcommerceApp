@@ -24,32 +24,33 @@ class ShoppingCartRepository:
 
     def get_shopping_cart_by_id(self, id: str) -> Optional[ShoppingCartModel]:
         cart = self.__collection.find_one({"_id": ObjectId(id)})
-        print('mongo get_shopping_cart_by_id', cart)
+        print("mongo get_shopping_cart_by_id", cart)
         return ShoppingCartModel(**cart) if cart else None
-    
+
     def get_shopping_cart_by_user_id(self, user_id: str) -> Optional[ShoppingCartModel]:
         cart = self.__collection.find_one({"user_id": ObjectId(user_id)})
-        return ShoppingCartModel(**cart) if cart else None  
+        return ShoppingCartModel(**cart) if cart else None
 
     def add_items(self, id: str, cart_item: List[CartItem]) -> bool:
         items_to_add = [item.model_dump() for item in cart_item]
         result: UpdateResult = self.__collection.update_one(
-            {"_id": ObjectId(id)}, {"$push": { "items": { "$each": items_to_add} }}
+            {"_id": ObjectId(id)}, {"$push": {"items": {"$each": items_to_add}}}
         )
         return result.modified_count > 0 or result.matched_count > 0
 
     def remove_items(self, id: str, cart_items: List[str]) -> bool:
         result: UpdateResult = self.__collection.update_one(
-            {"_id": ObjectId(id)}, {"$pull": { "items": { "product_id": { "$in": cart_items } } }}
+            {"_id": ObjectId(id)},
+            {"$pull": {"items": {"product_id": {"$in": cart_items}}}},
         )
         return result.modified_count > 0 or result.matched_count > 0
 
     def clear_cart(self, id: str) -> None:
         result: UpdateResult = self.__collection.update_one(
-            {"_id": ObjectId(id)}, {"$set": { "items": [] }}
+            {"_id": ObjectId(id)}, {"$set": {"items": []}}
         )
         return result.modified_count > 0 or result.matched_count > 0
-    
+
     def delete_shopping_cart(self, id: str) -> bool:
         result = self.__collection.delete_one({"_id": ObjectId(id)})
         return result.deleted_count > 0

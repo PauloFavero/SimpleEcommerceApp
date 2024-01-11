@@ -25,7 +25,12 @@ class ProductsRepository:
         self.__collection: Collection = self.__db.get_collection("products")
 
     def get_all_products(
-        self, page: int = 1, limit: int = 10, sort_order: int = 1, sort_by: str = 'name', category_filter: str = None
+        self,
+        page: int = 1,
+        limit: int = 10,
+        sort_order: int = 1,
+        sort_by: str = "name",
+        category_filter: str = None,
     ) -> PaginatedProductsModel:
         pipeline: List[Dict[str, Any]] = []
         if category_filter:

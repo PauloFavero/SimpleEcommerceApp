@@ -94,7 +94,7 @@ def replace_product_data(
             detail="Product not found",
         )
     return f"Product {id} data replaced"
- 
+
 
 @products_router.delete("/{id}", status_code=HTTPStatus.OK)
 def delete_product(id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
