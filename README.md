@@ -56,6 +56,8 @@ The goal of API is manage the users, products and shopping carts for an e-commer
 - User authentication endpoint.
 - API authentication and authorization based on user role.
 - Handle products stock availability
+- Improve the overral architecture by strictly respecting a clean arch or domain drive desing and SOLID principles.
+  - Add interfaces and adapters for dependency inversion and injection in router controllers.
 
 ## DEV Tools:
 
