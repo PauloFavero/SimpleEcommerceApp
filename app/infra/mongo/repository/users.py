@@ -18,16 +18,16 @@ class AddUserModel(User):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
+
 class UsersRepository:
     def __init__(self, db: Database = mongo_database) -> None:
         self.__db: Database = db
         self.__collection: Collection = self.__db.get_collection("users")
 
-    def get_all_users(self, page, limit) -> PaginatedUsersModel:
+    def get_all_users(self, page: int = 1, limit: int = 10) -> PaginatedUsersModel:
         pagination_stage = build_pagination_query(page, limit)
         pipeline = [{"$match": {}}] + pagination_stage
         users = list(self.__collection.aggregate(pipeline))[0]
-        print(users)
         return PaginatedUsersModel(**users)
 
     def get_user_by_id(self, id: str) -> Optional[UserModel]:
@@ -49,13 +49,12 @@ class UsersRepository:
             {"_id": ObjectId(id)}, {"$set": update_data}
         )
         return result.modified_count > 0 or result.matched_count > 0
-    
+
     def replace_user_data(self, id: str, user: UpdateUser) -> bool:
         user_data = AddUserModel(**user.model_dump())
         user_data.password = encrypt_password(user_data.password)
         result: UpdateResult = self.__collection.replace_one(
-            {"_id": ObjectId(id)}, 
-            user_data.model_dump()
+            {"_id": ObjectId(id)}, user_data.model_dump()
         )
         return result.modified_count > 0 or result.matched_count > 0
 
