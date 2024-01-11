@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from typing import Optional
 from pydantic import BaseModel, Field, model_validator
 
 from .product_characterists import Colors
@@ -14,9 +13,10 @@ class Product(BaseModel):
     color: Colors = Colors.BLACK
     category_id: str
     image: str
-    created_at: datetime = Field(default=datetime.now())
-    updated_at: datetime = Field(default=datetime.now())
 
-    @model_validator(mode="before")
-    def handle_data_update(self):
-        self.updated_at = datetime.now()
+
+class UpdateProduct(BaseModel):
+    price: Optional[float] = None
+    stock_quantity: Optional[int] = None
+    color: Optional[Colors] = None
+    image: Optional[str] = None

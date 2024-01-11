@@ -6,7 +6,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import environment
-from .routes.users import user_router
+from .routes import user_router, products_router
+
 
 allowed_methods = ["POST, GET", "DELETE", "PUT", "PATCH"]
 
@@ -28,7 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(user_router)
-
+app.include_router(products_router)
 
 @app.get("/", status_code=HTTPStatus.OK)
 def root():
