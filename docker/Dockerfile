@@ -4,5 +4,6 @@ LABEL maintainer="Paulo H Favero Pereira <phfaverop@gmail.com>"
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN pip install --force-reinstall -v fastapi uvicorn
 
 COPY ../app /app
