@@ -62,6 +62,11 @@ def add_product(product: Product) -> str:
             status_code=HTTPStatus.CONFLICT,
             detail=str(e),
         )
+    except Exception as e:
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=str(e),
+        )
 
 
 # partially update product
@@ -75,7 +80,7 @@ def update_product(
             status_code=HTTPStatus.NOT_FOUND,
             detail="Product not found",
         )
-    return
+    return f"Product {id} updated"
 
 
 @products_router.put("/{id}", status_code=HTTPStatus.OK)
@@ -88,8 +93,8 @@ def replace_product_data(
             status_code=HTTPStatus.NOT_FOUND,
             detail="Product not found",
         )
-    return
-
+    return f"Product {id} data replaced"
+ 
 
 @products_router.delete("/{id}", status_code=HTTPStatus.OK)
 def delete_product(id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
@@ -99,4 +104,4 @@ def delete_product(id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
             status_code=HTTPStatus.NOT_FOUND,
             detail="Product not found",
         )
-    return
+    return f"Product {id} deleted"
