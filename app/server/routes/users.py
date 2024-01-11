@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Path, HTTPException
 from pymongo.errors import DuplicateKeyError
 
 from entities import User, UpdateUser
@@ -30,7 +30,7 @@ async def get_users(page: int = 1, limit: int = 10) -> PaginatedUsersModel:
     "/{id}",
     status_code=HTTPStatus.OK,
 )
-async def get_user(id: str) -> UserModel:
+async def get_user(id: str=Path(..., regex=r"^[0-9a-f]{24}$")) -> UserModel:
     user = user_repo.get_user_by_id(id)
     if not user:
         raise HTTPException(
@@ -54,7 +54,7 @@ def add_user(user: User) -> str:
 
 # partially update user
 @user_router.patch("/{id}", status_code=HTTPStatus.OK)
-def update_user(id: str, user: UpdateUser) -> None:
+def update_user(user: UpdateUser, id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
     success = user_repo.update_user(id, user)
     if not success:
         raise HTTPException(
@@ -64,8 +64,18 @@ def update_user(id: str, user: UpdateUser) -> None:
     return
 
 @user_router.put("/{id}", status_code=HTTPStatus.OK)
-def replace_user_data(id: str, user: User) -> None:
+def replace_user_data(user: User, id: str= Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
     success = user_repo.replace_user_data(id, user)
+    if not success:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail="User not found",
+        )
+    return
+
+@user_router.delete("/{id}", status_code=HTTPStatus.OK)
+def delete_user(id: str = Path(..., regex=r"^[0-9a-f]{24}$")) -> None:
+    success = user_repo.delete_user(id)
     if not success:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,

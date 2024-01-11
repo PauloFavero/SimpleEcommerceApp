@@ -58,3 +58,7 @@ class UsersRepository:
             user_data.model_dump()
         )
         return result.modified_count > 0 or result.matched_count > 0
+
+    def delete_user(self, id: str) -> bool:
+        result = self.__collection.delete_one({"_id": ObjectId(id)})
+        return result.deleted_count > 0
