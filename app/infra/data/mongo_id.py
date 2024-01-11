@@ -22,7 +22,6 @@ class PyObjectId(ObjectId):
     def __get_pydantic_core_schema__(
         cls, source_type, _handler
     ) -> core_schema.CoreSchema:
-        print("source_type", source_type)
         assert source_type is ObjectId
         return core_schema.no_info_wrap_validator_function(
             cls.validate_object_id,

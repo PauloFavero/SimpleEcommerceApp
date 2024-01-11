@@ -23,7 +23,7 @@ class OrderItem(BaseModel):
 class Order(BaseModel):
     user_id: str
     address_id: str
-    itens: List[OrderItem] = []
+    items: List[OrderItem] = []
     total: float = 0.0
     payment_method: PaymentMethod = PaymentMethod.credit_card
     status: OrderStatus = OrderStatus.PENDING

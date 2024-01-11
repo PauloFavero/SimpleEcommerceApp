@@ -31,7 +31,8 @@ class UsersRepository:
         return PaginatedUsersModel(**users)
 
     def get_user_by_id(self, id: str) -> Optional[UserModel]:
-        return self.__collection.find_one({"_id": ObjectId(id)})
+        user = self.__collection.find_one({"_id": ObjectId(id)})
+        return UserModel(**user) if user else None
 
     def create_user(self, user: User) -> str:
         add_data = AddUserModel(**user.model_dump())

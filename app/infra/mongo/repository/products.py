@@ -10,7 +10,6 @@ from pymongo import ASCENDING, DESCENDING
 
 from entities import Product, UpdateProduct
 from ..handler import db as mongo_database
-from infra import encrypt_password
 from ...data.products import ProductModel, PaginatedProductsModel
 from ..helpers.pagination import build_pagination_query
 
@@ -43,7 +42,8 @@ class ProductsRepository:
         return PaginatedProductsModel(**products)
 
     def get_product_by_id(self, id: str) -> Optional[ProductModel]:
-        return self.__collection.find_one({"_id": ObjectId(id)})
+        product = self.__collection.find_one({"_id": ObjectId(id)})
+        return ProductModel(**product) if product else None
 
     def create_product(self, product: Product) -> str:
         add_data = AddProductModel(**product.model_dump())
